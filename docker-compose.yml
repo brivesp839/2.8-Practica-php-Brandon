@@ -18,7 +18,7 @@ services:
 
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db
+      MYSQL_DATABASE: tablon_anuncios
       MYSQL_USER: dev
       MYSQL_PASSWORD: dev
     restart: always
