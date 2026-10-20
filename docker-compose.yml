@@ -1,0 +1,42 @@
+services:
+
+  web:
+    image: php:8.3-apache
+
+    ports:
+      - "8080:80"
+
+    volumes:
+      - ./tienda-articulos:/var/www/html
+      - ./php/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
+
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.4
+
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: db
+      MYSQL_USER: dev
+      MYSQL_PASSWORD: dev
+    restart: always
+
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin
+
+    environment:
+      PMA_HOST: db
+
+    ports:
+      - "8082:80"
+
+    depends_on:
+      - db
+
+volumes:
+  db_data:
