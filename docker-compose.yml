@@ -7,7 +7,7 @@ services:
       - "8080:80"
 
     volumes:
-      - ./tienda-articulos:/var/www/html
+      - .:/var/www/html
       - ./php/custom.ini:/usr/local/etc/php/conf.d/custom.ini:ro
 
     depends_on:
