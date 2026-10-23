@@ -16,10 +16,10 @@ services:
     image: mysql:8.4
 
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: tablon_anuncios
-      MYSQL_USER: dev
-      MYSQL_PASSWORD: dev
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
     restart: always
 
     volumes:
