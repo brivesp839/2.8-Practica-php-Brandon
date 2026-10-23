@@ -24,6 +24,9 @@ services:
 
     volumes:
       - db_data:/var/lib/mysql
+      #Hago que la base de datos se cargue de manera automática con docker
+      # Todo .sql en esta carpeta se ejecuta al crear la base de datos por primera vez
+      - ./database.sql:/docker-entrypoint-initdb.d/database.sql:ro
 
   phpmyadmin:
     image: phpmyadmin
@@ -37,5 +40,6 @@ services:
     depends_on:
       - db
 
+#Cargo de manera automática la base de datos con docker
 volumes:
   db_data:
