@@ -1,0 +1,19 @@
+#Activa Module mod rewrite
+#AllowOverride All para la carpeta
+FROM php:8.3-apache
+
+# Driver de MySQL para PDO
+RUN docker-php-ext-install pdo pdo_mysql
+
+# Activa el módulo de reescritura de URLs
+RUN a2enmod rewrite
+
+# Apache sirve public/ en vez de la raíz del proyecto
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' \
+    /etc/apache2/sites-available/*.conf \
+    /etc/apache2/apache2.conf \
+    /etc/apache2/conf-available/*.conf
+
+# Permite que los .htaccess funcionen (cambia AllowOverride None por All)
+RUN sed -ri -e 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf

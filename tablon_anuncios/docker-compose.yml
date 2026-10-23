@@ -5,6 +5,12 @@ services:
 
     ports:
       - "8080:80"
+    
+    command: >
+      bash -c "docker-php-ext-install pdo_mysql
+      && sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+      && sed -i 's!/var/www/!/var/www/html/public!g' /etc/apache2/apache2.conf
+      && apache2-foreground"
 
     volumes:
       - .:/var/www/html
