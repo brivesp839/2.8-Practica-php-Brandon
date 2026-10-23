@@ -1,3 +1,10 @@
+# Activa el motor de reescritura de URLs
 RewriteEngine On
+
+# Condición: solo si lo pedido NO es un archivo real (!-f)
+# (así los archivos existentes, como css o imágenes, se sirven tal cual)
 RewriteCond %{REQUEST_FILENAME} !-f
+
+# Regla: todo lo demás se envía a index.php, conservando los parámetros
+# de la URL (QSA) y sin aplicar más reglas (L)
 RewriteRule ^ index.php [QSA,L]
