@@ -1,43 +1,59 @@
 USE tablon_anuncios
-CREATE TABLE usuarios (
+-- ============================================================
+-- USUARIOS
+-- ============================================================
+CREATE TABLE users (
     id            INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,  -- Identificador único
-    nombre_usuario      VARCHAR(50)  NOT NULL UNIQUE,             -- UNIQUE: no puede repetirse
+    username      VARCHAR(50)  NOT NULL UNIQUE,             -- UNIQUE: no puede repetirse
     email         VARCHAR(100) NOT NULL UNIQUE,
-    contrasena VARCHAR(255) NOT NULL                    -- NUNCA la contraseña en claro
-);
+    password_hash VARCHAR(255) NOT NULL,                    -- NUNCA la contraseña en claro
+    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP       -- Se rellena sola al insertar
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE categorias (
+-- ============================================================
+-- CATEGORÍAS
+-- ============================================================
+CREATE TABLE categories (
     id   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE
-);
+    name VARCHAR(50) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE articulos (
+-- ============================================================
+-- ANUNCIOS (publicaciones)
+-- ============================================================
+CREATE TABLE articles (
     id          INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_usuario     INT UNSIGNED NOT NULL,   -- Autor del anuncio (FK a users)
-    id_categoria INT UNSIGNED NOT NULL,   -- Categoría (FK a categories)
-    titulo       VARCHAR(150) NOT NULL,
+    user_id     INT UNSIGNED NOT NULL,   -- Autor del anuncio (FK a users)
+    category_id INT UNSIGNED NOT NULL,   -- Categoría (FK a categories)
+    title       VARCHAR(150) NOT NULL,
     body        TEXT         NOT NULL,   -- TEXT admite textos largos
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Si se borra un usuario, se borran sus anuncios
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     -- No se puede borrar una categoría que tenga anuncios
-    FOREIGN KEY (id_categoria) REFERENCES categorias(id) ON DELETE RESTRICT
-);
+    FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE comentarios (
+-- ============================================================
+-- COMENTARIOS
+-- ============================================================
+CREATE TABLE comments (
     id         INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_articulo INT UNSIGNED NOT NULL,    -- Anuncio comentado (FK a articles)
-    id_usuario   INT UNSIGNED NOT NULL,    -- Autor del comentario (FK a users)
+    article_id INT UNSIGNED NOT NULL,    -- Anuncio comentado (FK a articles)
+    user_id    INT UNSIGNED NOT NULL,    -- Autor del comentario (FK a users)
     body       TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- Si se borra el anuncio, desaparecen sus comentarios
-    FOREIGN KEY (id_articulo) REFERENCES articulos(id) ON DELETE CASCADE,
-    FOREIGN KEY (id_usuario)    REFERENCES usuarios(id)    ON DELETE CASCADE
-);
+    FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)    REFERENCES users(id)    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO categorias (nombre) VALUES
+-- ============================================================
+-- DATOS INICIALES: categorías de ejemplo
+-- ============================================================
+INSERT INTO categories (name) VALUES
     ('Compra-venta'),
     ('Proyectos'),
     ('Objetos perdidos'),
